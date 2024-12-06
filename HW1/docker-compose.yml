@@ -1,0 +1,31 @@
+version: '3'
+services:
+  rabbitmq:
+    image: 'rabbitmq:3-management'
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+
+  features:
+    build: ./features
+    depends_on:
+      - rabbitmq
+    restart: always
+    volumes:
+      - ./logs:/app/logs
+
+  metric:
+    build: ./metric
+    depends_on:
+      - rabbitmq
+    restart: always
+    volumes:
+      - ./logs:/app/logs
+
+  plot:
+    build: ./plot
+    depends_on:
+      - metric
+    restart: always
+    volumes:
+      - ./logs:/app/logs
